@@ -8,7 +8,8 @@ import (
 
 type GbeConfig struct {
 	DataSource      DataSourceConfig `json:"dataSource"`
-	Rpc             string           `json:"ws-rpc"`
+	WsRpc           string           `json:"ws-rpc"`
+	HttpRpc         string           `json:"http-rpc"`
 	ContractAddress string           `json:"contract-Address"`
 }
 

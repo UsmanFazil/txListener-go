@@ -5,3 +5,9 @@ CREATE TABLE `g_txhash` (
   PRIMARY KEY (`txhash`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `g_lastconfirmed` (
+  `blocknum`    bigint(20) NOT NULL,
+  PRIMARY KEY (`blocknum`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

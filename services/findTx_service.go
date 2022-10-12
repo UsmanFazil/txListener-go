@@ -20,7 +20,7 @@ func FindTx(block *types.Block) {
 		if tx.To().String() == contractAddress {
 			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()))
 		}
-
 	}
+	SaveLastConfirmed(int(block.Number().Int64()))
 	fmt.Println("Block parsed : ", block.Number().Uint64())
 }

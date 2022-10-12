@@ -9,4 +9,7 @@ type Store interface {
 
 	GetTxByHash(txHash string) (*Txhash, error)
 	AddTx(tx *Txhash) error
+	GetBlockNum() (*Lastconfirmed, error)
+	AddBlockNum(lastconfirmedNum *Lastconfirmed) error
+	UpdateBlockNum(newConfimed, oldConfirmed int) (*Lastconfirmed, error)
 }

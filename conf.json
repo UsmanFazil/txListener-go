@@ -1,12 +1,13 @@
 {
     "ws-rpc": "wss://polygon-mainnet.g.alchemy.com/v2/hONSC7upVBQ-kZ7yXYmudiQV50rsIoCg",
+    "hhtp-rpc":"https://polygon-mainnet.g.alchemy.com/v2/hONSC7upVBQ-kZ7yXYmudiQV50rsIoCg",
     "contract-Address": "0x7d33c606736408D62Bd8e166b7571668d43F0c21",
     "dataSource": {
         "driverName": "mysql",
         "addr": "127.0.0.1:3306",
         "database": "listener",
         "user": "root",
-        "password": "password",
+        "password": "",
         "enableAutoMigrate": false
       }
 }

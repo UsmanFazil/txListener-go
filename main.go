@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	client, err := ethclient.Dial(conf.GetConfig().Rpc)
+	client, err := ethclient.Dial(conf.GetConfig().WsRpc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -23,6 +23,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	lastConfimedBlock, err := service.GetLastConfirmedNum()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	syncFlag := true
 
 	for {
 		select {
@@ -34,7 +41,13 @@ func main() {
 				log.Fatal(err)
 			}
 			fmt.Println("New block :", block.Number().Uint64())
+
+			if syncFlag && lastConfimedBlock != nil {
+				go service.SyncBlocks(uint64(lastConfimedBlock.Blocknum), block.Number().Uint64())
+				syncFlag = false
+			}
 			go service.FindTx(block)
 		}
 	}
+
 }

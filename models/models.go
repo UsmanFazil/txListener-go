@@ -5,3 +5,7 @@ type Txhash struct {
 	Blocknum    int
 	Contractadd string
 }
+
+type Lastconfirmed struct {
+	Blocknum int `gorm:"column:blocknum;primary_key"`
+}

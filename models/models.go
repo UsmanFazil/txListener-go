@@ -6,6 +6,8 @@ type Txhash struct {
 	Contractadd string
 }
 
-type Lastconfirmed struct {
-	Blocknum int `gorm:"column:blocknum;primary_key"`
+type Blocksyncinfo struct {
+	Blocksyncnum  int
+	Syncstatus    int
+	Backupsyncnum int
 }

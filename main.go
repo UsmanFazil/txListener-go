@@ -24,12 +24,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lastConfimedBlock, err := service.GetLastConfirmedNum()
+	lastConfimedBlock, err := service.GetBlockSyncInfo()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	syncFlag := true
+	firstRun := true
 
 	for {
 		select {
@@ -42,11 +42,17 @@ func main() {
 			}
 			fmt.Println("New block :", block.Number().Uint64())
 
-			if syncFlag && lastConfimedBlock != nil {
-				go service.SyncBlocks(uint64(lastConfimedBlock.Blocknum), block.Number().Uint64())
-				syncFlag = false
+			if firstRun && lastConfimedBlock != nil {
+
+				syncStartNum := uint64(lastConfimedBlock.Backupsyncnum)
+				if lastConfimedBlock.Syncstatus == 1 {
+					syncStartNum = uint64(lastConfimedBlock.Blocksyncnum)
+				}
+
+				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock)
 			}
-			go service.FindTx(block)
+			go service.FindTx(block, false)
+			firstRun = false
 		}
 	}
 

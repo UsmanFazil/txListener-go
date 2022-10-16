@@ -19,24 +19,32 @@ func (s *Store) AddTx(tx *models.Txhash) error {
 	return s.db.Create(tx).Error
 }
 
-func (s *Store) GetBlockNum() (*models.Lastconfirmed, error) {
-	var lastconfirmedNum models.Lastconfirmed
-	err := s.db.Raw("SELECT * FROM g_lastconfirmed").Scan(&lastconfirmedNum).Error
+func (s *Store) GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
+	var lastconfirmedNum models.Blocksyncinfo
+	err := s.db.Raw("SELECT * FROM g_blocksyncinfo").Scan(&lastconfirmedNum).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
 	return &lastconfirmedNum, err
 }
 
-func (s *Store) AddBlockNum(lastconfirmedNum *models.Lastconfirmed) error {
+func (s *Store) AddBlockSyncInfo(lastconfirmedNum *models.Blocksyncinfo) error {
 	return s.db.Create(lastconfirmedNum).Error
 }
 
-func (s *Store) UpdateBlockNum(newConfimed, oldConfirmed int) (*models.Lastconfirmed, error) {
-	var lastconfirmedNum models.Lastconfirmed
-	err := s.db.Raw("UPDATE g_lastconfirmed SET blocknum=? WHERE blocknum=?", newConfimed, oldConfirmed).Scan(&lastconfirmedNum).Error
+func (s *Store) UpdateSyncInfo(syncInfo *models.Blocksyncinfo) (*models.Blocksyncinfo, error) {
+	err := s.db.Model(&syncInfo).Update(&syncInfo).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
-	return &lastconfirmedNum, err
+	return syncInfo, err
+}
+
+func (s *Store) UpdateSyncStatus(status int) (*models.Blocksyncinfo, error) {
+	var syncInfo models.Blocksyncinfo
+	err := s.db.Raw("UPDATE g_blocksyncinfo SET syncstatus = ?", status).Scan(&syncInfo).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return &syncInfo, err
 }

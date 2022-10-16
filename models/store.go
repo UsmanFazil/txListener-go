@@ -8,8 +8,11 @@ type Store interface {
 	//GetConfigs() ([]*Config, error)
 
 	GetTxByHash(txHash string) (*Txhash, error)
-	AddTx(tx *Txhash) error
-	GetBlockNum() (*Lastconfirmed, error)
-	AddBlockNum(lastconfirmedNum *Lastconfirmed) error
-	UpdateBlockNum(newConfimed, oldConfirmed int) (*Lastconfirmed, error)
+	AddTx(*Txhash) error
+
+	GetBlockSyncInfo() (*Blocksyncinfo, error)
+	AddBlockSyncInfo(*Blocksyncinfo) error
+
+	UpdateSyncInfo(*Blocksyncinfo) (*Blocksyncinfo, error)
+	UpdateSyncStatus(status int) (*Blocksyncinfo, error)
 }

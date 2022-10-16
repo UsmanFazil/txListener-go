@@ -28,23 +28,32 @@ func GetTxByHash(hash string) (*models.Txhash, error) {
 	return mysql.SharedStore().GetTxByHash(hash)
 }
 
-func SaveLastConfirmed(blockNumber int) (*models.Lastconfirmed, error) {
+func SaveLastConfirmed(blockNumber int, backUpSync bool) (*models.Blocksyncinfo, error) {
 
-	blockNum, err := GetLastConfirmedNum()
+	blockNum, err := GetBlockSyncInfo()
 	if err != nil {
 		return nil, err
 	}
 
 	if blockNum == nil {
-		blockNum = &models.Lastconfirmed{
-			Blocknum: int(blockNumber),
+		blockNum = &models.Blocksyncinfo{
+			Blocksyncnum:  int(blockNumber),
+			Syncstatus:    1,
+			Backupsyncnum: 0,
 		}
-		return blockNum, mysql.SharedStore().AddBlockNum(blockNum)
+		return blockNum, mysql.SharedStore().AddBlockSyncInfo(blockNum)
 	}
 
-	return mysql.SharedStore().UpdateBlockNum(blockNumber, blockNum.Blocknum)
+	if backUpSync {
+		blockNum.Backupsyncnum = blockNumber
+	} else {
+		blockNum.Blocksyncnum = blockNumber
+	}
+
+	blockNum.Syncstatus = 0
+	return mysql.SharedStore().UpdateSyncInfo(blockNum)
 }
 
-func GetLastConfirmedNum() (*models.Lastconfirmed, error) {
-	return mysql.SharedStore().GetBlockNum()
+func GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
+	return mysql.SharedStore().GetBlockSyncInfo()
 }

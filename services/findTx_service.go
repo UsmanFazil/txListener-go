@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-func FindTx(block *types.Block) {
+func FindTx(block *types.Block, backupSync bool) {
 
 	contractAddress := conf.GetConfig().ContractAddress
 
@@ -21,6 +21,7 @@ func FindTx(block *types.Block) {
 			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()))
 		}
 	}
-	SaveLastConfirmed(int(block.Number().Int64()))
+	SaveLastConfirmed(int(block.Number().Int64()), backupSync)
+
 	fmt.Println("Block parsed : ", block.Number().Uint64())
 }

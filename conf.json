@@ -4,7 +4,7 @@
     "contract-Address": "0x7d33c606736408D62Bd8e166b7571668d43F0c21",
     "dataSource": {
         "driverName": "mysql",
-        "addr": "127.0.0.1:3306",
+        "addr": "host.docker.internal:3306",
         "database": "listener",
         "user": "root",
         "password": "",

@@ -1,0 +1,13 @@
+{
+    "ws-rpc": "",
+    "hhtp-rpc":"",
+    "contract-Address": "",
+    "dataSource": {
+        "driverName": "",
+        "addr": "",
+        "database": "",
+        "user": "",
+        "password": "",
+        "enableAutoMigrate": false
+      }
+}

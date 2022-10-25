@@ -8,6 +8,7 @@ type Store interface {
 	//GetConfigs() ([]*Config, error)
 
 	GetTxByHash(txHash string) (*Txhash, error)
+	GetTxHash() (*[]Txhash, error)
 	AddTx(*Txhash) error
 
 	GetBlockSyncInfo() (*Blocksyncinfo, error)

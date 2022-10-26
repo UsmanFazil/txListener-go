@@ -15,6 +15,15 @@ func (s *Store) GetTxByHash(txHash string) (*models.Txhash, error) {
 	return &tx, err
 }
 
+func (s *Store) GetTxHash() (*[]models.Txhash, error) {
+	var tx []models.Txhash
+	err := s.db.Raw("SELECT * FROM g_txhash").Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return &tx, err
+}
+
 func (s *Store) AddTx(tx *models.Txhash) error {
 	return s.db.Create(tx).Error
 }

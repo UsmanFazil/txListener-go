@@ -1,13 +1,13 @@
 {
-    "ws-rpc": "wss://polygon-mainnet.g.alchemy.com/v2/hONSC7upVBQ-kZ7yXYmudiQV50rsIoCg",
-    "hhtp-rpc":"https://polygon-mainnet.g.alchemy.com/v2/hONSC7upVBQ-kZ7yXYmudiQV50rsIoCg",
-    "contract-Address": "0x7d33c606736408D62Bd8e166b7571668d43F0c21",
+    "ws-rpc": "wss://polygon-mumbai.g.alchemy.com/v2/LkwuDynIO41EiOjugv3eRE04ycwQ2Ri7",
+    "hhtp-rpc":"https://polygon-mumbai.g.alchemy.com/v2/LkwuDynIO41EiOjugv3eRE04ycwQ2Ri7",
+    "contract-Address": "0xCAE473942eB4CC4597e0b5194574ACAE01FC329E",
     "dataSource": {
         "driverName": "mysql",
-        "addr": "host.docker.internal:3306",
+        "addr": "127.0.0.1:3306",
         "database": "listener",
         "user": "root",
-        "password": "",
+        "password": "password",
         "enableAutoMigrate": false
       }
 }

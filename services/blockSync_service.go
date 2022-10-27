@@ -26,8 +26,8 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo) {
 	}
 
 	blockNumber := big.NewInt(int64(startBlock))
-	bigOne := big.NewInt(int64(1))
 	fmt.Println("startBlock:", startBlock, "endBlock", endBlock)
+
 	for i := startBlock; i <= endBlock; i++ {
 
 		block, err := client.BlockByNumber(ctx, blockNumber)
@@ -36,8 +36,7 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo) {
 		}
 
 		go FindTx(block, true)
-
-		blockNumber.Add(blockNumber, bigOne)
+		blockNumber.Add(blockNumber, big.NewInt(int64(1)))
 	}
 
 	fmt.Println("All sync threads initiated")

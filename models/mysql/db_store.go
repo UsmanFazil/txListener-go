@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"fmt"
+
 	"github.com/block-listener/models"
 
 	"github.com/jinzhu/gorm"
@@ -39,6 +41,15 @@ func (s *Store) GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
 
 func (s *Store) AddBlockSyncInfo(lastconfirmedNum *models.Blocksyncinfo) error {
 	return s.db.Create(lastconfirmedNum).Error
+}
+
+func (s *Store) AddTxMintInfo(dataInfo *models.Txmintinfo) error {
+	return s.db.Create(dataInfo).Error
+}
+
+func (s *Store) AddTxBurnInfo(dataInfo *models.Txburninfo) error {
+	fmt.Println("dataInfo:", dataInfo)
+	return s.db.Create(dataInfo).Error
 }
 
 func (s *Store) UpdateSyncInfo(syncInfo *models.Blocksyncinfo) (*models.Blocksyncinfo, error) {

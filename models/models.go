@@ -18,11 +18,34 @@ type Blocksyncinfo struct {
 	Backupsyncnum int
 }
 
-// LogTransfer ..
-type LogTransfer struct {
-	From    common.Address
-	To      common.Address
-	TokenId *big.Int
+type Txmintinfo struct {
+	Txhash      string
+	Address     string
+	Amount      *big.Int
+	Signature   string
+	Fromchainid *big.Int
+	Tochainid   *big.Int
+	Status      string
+}
+
+type Txburninfo struct {
+	Txhash      string
+	Address     string
+	Amount      string
+	Signature   string
+	Fromchainid int64
+	Tochainid   int64
+	Status      string
+	Burnid      string
+}
+
+// LogBurn ..
+type LogBurn struct {
+	Owner         common.Address
+	Amount        *big.Int
+	OriginChainId *big.Int
+	ToChainId     *big.Int
+	BurnId        [32]byte
 }
 
 // LogApproval ..

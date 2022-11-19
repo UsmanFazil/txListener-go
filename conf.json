@@ -1,7 +1,7 @@
 {
-    "ws-rpc": "wss://polygon-mumbai.g.alchemy.com/v2/LkwuDynIO41EiOjugv3eRE04ycwQ2Ri7",
+    "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
     "hhtp-rpc":"https://polygon-mumbai.g.alchemy.com/v2/LkwuDynIO41EiOjugv3eRE04ycwQ2Ri7",
-    "contract-Address": "0xCAE473942eB4CC4597e0b5194574ACAE01FC329E",
+    "contract-Address": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
     "dataSource": {
         "driverName": "mysql",
         "addr": "127.0.0.1:3306",

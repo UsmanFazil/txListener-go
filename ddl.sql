@@ -12,3 +12,28 @@ CREATE TABLE `g_blocksyncinfo` (
   `backupsyncnum`    bigint(20) NOT NULL
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `g_txmintinfo` (
+  `txhash`    varchar(255) NOT NULL,
+  `address`   varchar(255) NOT NULL,
+  `amount`    bigint(125)    NOT NULL,
+  `signature` varchar(255)  DEFAULT NULL,
+  `fromchainid`   bigint(15)    NOT NULL,
+  `tochainid`   bigint(15)    NOT NULL,    
+  `status`    varchar(15) NOT NULL,
+  PRIMARY KEY (`txhash`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `g_txburninfo` (
+  `txhash`    varchar(255) NOT NULL,
+  `address`   varchar(255) NOT NULL,
+  `amount`    bigint(125)    NOT NULL,
+  `signature` varchar(255)  DEFAULT NULL,
+  `fromchainid`   bigint(15)    NOT NULL,
+  `tochainid`   bigint(15)    NOT NULL,   
+  `status`    varchar(15) NOT NULL,
+  `burnid`    varchar(255) NOT NULL,
+  PRIMARY KEY (`txhash`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

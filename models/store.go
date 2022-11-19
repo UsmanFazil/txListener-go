@@ -16,4 +16,7 @@ type Store interface {
 
 	UpdateSyncInfo(*Blocksyncinfo) (*Blocksyncinfo, error)
 	UpdateSyncStatus(status int) (*Blocksyncinfo, error)
+
+	AddTxMintInfo(*Txmintinfo) error
+	AddTxBurnInfo(*Txburninfo) error
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func SaveTx(txhash, contractAdd string, blockNumber uint) (*models.Txhash, error) {
+func SaveTx(txhash, contractAdd string, blockNumber uint, chainId int) (*models.Txhash, error) {
 
 	tx, err := GetTxByHash(txhash)
 	if err != nil {
@@ -20,6 +20,7 @@ func SaveTx(txhash, contractAdd string, blockNumber uint) (*models.Txhash, error
 		TxHash:      txhash,
 		Blocknum:    int(blockNumber),
 		Contractadd: contractAdd,
+		Chainid:     chainId,
 	}
 	return tx, mysql.SharedStore().AddTx(tx)
 }
@@ -28,9 +29,9 @@ func GetTxByHash(hash string) (*models.Txhash, error) {
 	return mysql.SharedStore().GetTxByHash(hash)
 }
 
-func SaveLastConfirmed(blockNumber int, backUpSync bool) (*models.Blocksyncinfo, error) {
+func SaveLastConfirmed(blockNumber, chainId int, backUpSync bool) (*models.Blocksyncinfo, error) {
 
-	blockNum, err := GetBlockSyncInfo()
+	blockNum, err := GetBlockInfobyChainId(chainId)
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +41,7 @@ func SaveLastConfirmed(blockNumber int, backUpSync bool) (*models.Blocksyncinfo,
 			Blocksyncnum:  int(blockNumber),
 			Syncstatus:    1,
 			Backupsyncnum: 0,
+			Chainid:       chainId,
 		}
 		return blockNum, mysql.SharedStore().AddBlockSyncInfo(blockNum)
 	}
@@ -54,6 +56,10 @@ func SaveLastConfirmed(blockNumber int, backUpSync bool) (*models.Blocksyncinfo,
 	return mysql.SharedStore().UpdateSyncInfo(blockNum)
 }
 
-func GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
-	return mysql.SharedStore().GetBlockSyncInfo()
+func GetBlockInfobyChainId(chainId int) (*models.Blocksyncinfo, error) {
+	return mysql.SharedStore().GetBlockInfobyChainId(chainId)
 }
+
+// func GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
+// 	return mysql.SharedStore().GetBlockSyncInfo()
+// }

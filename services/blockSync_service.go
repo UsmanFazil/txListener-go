@@ -6,20 +6,19 @@ import (
 	"log"
 	"math/big"
 
-	"github.com/block-listener/conf"
 	"github.com/block-listener/models"
 	"github.com/block-listener/models/mysql"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo) {
+func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, contractAddress, wsRpc string, chainId int) {
 	mysql.SharedStore().UpdateSyncInfo(blockInfo)
 	_, err := mysql.SharedStore().UpdateSyncStatus(0)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	client, err := ethclient.Dial(conf.GetConfig().WsRpc)
+	client, err := ethclient.Dial(wsRpc)
 	ctx := context.Background()
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +34,7 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo) {
 			log.Fatal(err)
 		}
 
-		go FindTx(block, true)
+		go FindTx(block, true, contractAddress, chainId)
 		blockNumber.Add(blockNumber, big.NewInt(int64(1)))
 	}
 

@@ -13,7 +13,13 @@ import (
 )
 
 func main() {
-	client, err := ethclient.Dial(conf.GetConfig().WsRpc)
+	chainService(conf.GetConfig().EthData.WsRpc, conf.GetConfig().EthData.ContractAddress, conf.GetConfig().EthData.ChainId)
+	chainService(conf.GetConfig().BscData.WsRpc, conf.GetConfig().BscData.ContractAddress, conf.GetConfig().BscData.ChainId)
+	chainService(conf.GetConfig().CronosData.WsRpc, conf.GetConfig().CronosData.ContractAddress, conf.GetConfig().CronosData.ChainId)
+}
+
+func chainService(wsRpc, contractAddress string, chainId int) {
+	client, err := ethclient.Dial(wsRpc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,7 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lastConfimedBlock, err := service.GetBlockSyncInfo()
+	lastConfimedBlock, err := service.GetBlockInfobyChainId(chainId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,11 +56,10 @@ func main() {
 					syncStartNum = uint64(lastConfimedBlock.Blocksyncnum)
 				}
 
-				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock)
+				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock, contractAddress, wsRpc, chainId)
 			}
-			go service.FindTx(block, false)
+			go service.FindTx(block, false, contractAddress, chainId)
 			firstRun = false
 		}
 	}
-
 }

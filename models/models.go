@@ -10,12 +10,14 @@ type Txhash struct {
 	TxHash      string `gorm:"column:txhash;primary_key"`
 	Blocknum    int
 	Contractadd string
+	Chainid     int
 }
 
 type Blocksyncinfo struct {
 	Blocksyncnum  int
 	Syncstatus    int
 	Backupsyncnum int
+	Chainid       int
 }
 
 type Txmintinfo struct {
@@ -33,7 +35,7 @@ type Txburninfo struct {
 	Address     string
 	Amount      string
 	Signature   string
-	Fromchainid int64
+	FromchainId int64
 	Tochainid   int64
 	Status      string
 	Burnid      string

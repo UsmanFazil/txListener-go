@@ -1,13 +1,25 @@
 {
-    "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
-    "hhtp-rpc":"https://polygon-mumbai.g.alchemy.com/v2/LkwuDynIO41EiOjugv3eRE04ycwQ2Ri7",
-    "contract-Address": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+    "eth":{
+      "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
+      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "chain-id": 5 
+    },
+    "bsc":{
+      "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
+      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "chain-id": 97
+    },
+    "cronos":{
+      "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
+      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "chain-id": 5
+    },
     "dataSource": {
         "driverName": "mysql",
         "addr": "127.0.0.1:3306",
         "database": "listener",
         "user": "root",
-        "password": "password",
+        "password": "",
         "enableAutoMigrate": false
       }
 }

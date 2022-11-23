@@ -39,6 +39,15 @@ func (s *Store) GetBlockSyncInfo() (*models.Blocksyncinfo, error) {
 	return &lastconfirmedNum, err
 }
 
+func (s *Store) GetBlockInfobyChainId(chainId int) (*models.Blocksyncinfo, error) {
+	var lastconfirmedNum models.Blocksyncinfo
+	err := s.db.Raw("SELECT * FROM g_blocksyncinfo WHERE chainid=?", chainId).Scan(&lastconfirmedNum).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return &lastconfirmedNum, err
+}
+
 func (s *Store) AddBlockSyncInfo(lastconfirmedNum *models.Blocksyncinfo) error {
 	return s.db.Create(lastconfirmedNum).Error
 }

@@ -64,7 +64,7 @@ func OpenTx(client *ethclient.Client) {
 				Address:     burnEvent.Owner.String(),
 				Amount:      burnEvent.Amount.String(),
 				Tochainid:   vLog.Topics[3].Big().Int64(),
-				Fromchainid: vLog.Topics[2].Big().Int64(),
+				FromchainId: vLog.Topics[2].Big().Int64(),
 				Status:      "pending",
 				Burnid:      hex.EncodeToString(burnEvent.BurnId[:]),
 			}

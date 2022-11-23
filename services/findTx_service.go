@@ -3,13 +3,10 @@ package service
 import (
 	"fmt"
 
-	"github.com/block-listener/conf"
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-func FindTx(block *types.Block, backupSync bool) {
-
-	contractAddress := conf.GetConfig().ContractAddress
+func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId int) {
 
 	for _, tx := range block.Transactions() {
 
@@ -18,12 +15,12 @@ func FindTx(block *types.Block, backupSync bool) {
 		}
 
 		if tx.To().String() == contractAddress {
-			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()))
+			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()), chainId)
 
 		}
 	}
 
-	SaveLastConfirmed(int(block.Number().Int64()), backupSync)
+	SaveLastConfirmed(int(block.Number().Int64()), chainId, backupSync)
 
 	fmt.Println("Block parsed : ", block.Number().Uint64())
 

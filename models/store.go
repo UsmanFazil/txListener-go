@@ -12,6 +12,7 @@ type Store interface {
 	AddTx(*Txhash) error
 
 	GetBlockSyncInfo() (*Blocksyncinfo, error)
+	GetBlockInfobyChainId(int) (*Blocksyncinfo, error)
 	AddBlockSyncInfo(*Blocksyncinfo) error
 
 	UpdateSyncInfo(*Blocksyncinfo) (*Blocksyncinfo, error)

@@ -1,7 +1,16 @@
 {
+  "eth":{
     "ws-rpc": "",
-    "hhtp-rpc":"",
-    "contract-Address": "",
+    "bridge-contract": ""
+  },
+  "bsc":{
+    "ws-rpc": "",
+    "bridge-contract": ""
+  },
+  "cronos":{
+    "ws-rpc": "",
+    "bridge-contract": ""
+  },
     "dataSource": {
         "driverName": "",
         "addr": "",

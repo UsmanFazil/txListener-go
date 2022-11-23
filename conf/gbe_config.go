@@ -7,10 +7,10 @@ import (
 )
 
 type GbeConfig struct {
-	DataSource      DataSourceConfig `json:"dataSource"`
-	WsRpc           string           `json:"ws-rpc"`
-	HttpRpc         string           `json:"http-rpc"`
-	ContractAddress string           `json:"contract-Address"`
+	DataSource DataSourceConfig `json:"dataSource"`
+	EthData    ChainData        `json:"eth"`
+	BscData    ChainData        `json:"bsc"`
+	CronosData ChainData        `json:"cronos"`
 }
 
 type DataSourceConfig struct {
@@ -20,6 +20,12 @@ type DataSourceConfig struct {
 	User              string `json:"user"`
 	Password          string `json:"password"`
 	EnableAutoMigrate bool   `json:"enableAutoMigrate"`
+}
+
+type ChainData struct {
+	WsRpc           string `json:"ws-rpc"`
+	ContractAddress string `json:"contract-Address"`
+	ChainId         int    `json:"chain-id"`
 }
 
 var config GbeConfig

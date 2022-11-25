@@ -15,6 +15,7 @@ func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId
 		}
 
 		if tx.To().String() == contractAddress {
+			fmt.Println("matched------------------")
 			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()), chainId)
 
 		}

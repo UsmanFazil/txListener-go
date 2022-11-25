@@ -17,31 +17,41 @@ import (
 )
 
 var (
-	logBurnSig         = []byte("Burn(address,uint256,uint256,uint256,bytes32)")
-	LogApprovalSig     = []byte("Approval(address,address,uint256)")
-	logBurnSigHash     = crypto.Keccak256Hash(logBurnSig)
-	logApprovalSigHash = crypto.Keccak256Hash(LogApprovalSig)
+	logBurnSig     = []byte("Burn(address,uint256,uint256,uint256,bytes32)")
+	LogMintSig     = []byte("Mint(address,uint256,uint256,uint256,bytes32,bytes32)")
+	logBurnSigHash = crypto.Keccak256Hash(logBurnSig)
+	logMintSigHash = crypto.Keccak256Hash(LogMintSig)
 )
+
+const path = "ABI/bridgeABI.json"
 
 func OpenTx(client *ethclient.Client) {
 	tx, err := GetTxHash()
 	if err != nil || len((*tx)) == 0 {
 		return
 	}
+	for i := 0; i < len(*tx); i++ {
+		fmt.Println("Loop iterate:", i)
+		OpenLogs(client, (*tx)[i].TxHash)
+	}
+}
+func OpenLogs(client *ethclient.Client, singletxHash string) {
 
-	txHash := common.HexToHash((*tx)[0].TxHash)
-
+	txHash := common.HexToHash(singletxHash)
+	fmt.Println("txHash:", txHash)
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println("receipt:")
 
-	File, err := ioutil.ReadFile("ABI/bridgeABI.json")
+	File, err := ioutil.ReadFile(path)
 
 	contractAbi, err := abi.JSON(strings.NewReader(string(File)))
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("receipt:", receipt.Logs)
 
 	for _, vLog := range receipt.Logs {
 		fmt.Printf("Log Block Number: %d\n", vLog.BlockNumber)
@@ -60,23 +70,39 @@ func OpenTx(client *ethclient.Client) {
 			burnEvent.Owner = common.HexToAddress(vLog.Topics[1].Hex())
 
 			tx := &models.Txburninfo{
-				Txhash:      string(vLog.TxHash.String()),
-				Address:     burnEvent.Owner.String(),
-				Amount:      burnEvent.Amount.String(),
-				Tochainid:   vLog.Topics[3].Big().Int64(),
-				FromchainId: vLog.Topics[2].Big().Int64(),
-				Status:      "pending",
-				Burnid:      hex.EncodeToString(burnEvent.BurnId[:]),
+				Txhash:        string(vLog.TxHash.String()),
+				Address:       burnEvent.Owner.String(),
+				Amount:        burnEvent.Amount.String(),
+				Tochainid:     vLog.Topics[3].Big().Int64(),
+				Originchainid: vLog.Topics[2].Big().Int64(),
+				Status:        "pending",
+				Burnid:        hex.EncodeToString(burnEvent.BurnId[:]),
 			}
 
 			mysql.SharedStore().AddTxBurnInfo(tx)
-		case logApprovalSigHash.Hex():
-			fmt.Printf("Log Name: Approval\n")
+		case logMintSigHash.Hex():
+			fmt.Printf("Log Name: Mint\n")
 
+			var mintEvent models.LogMint
+			err := contractAbi.UnpackIntoInterface(&mintEvent, "Mint", vLog.Data)
+			if err != nil {
+				fmt.Println("error", err)
+			}
+			mintEvent.Owner = common.HexToAddress(vLog.Topics[1].Hex())
+			fmt.Println("burnEvent:", mintEvent)
+
+			tx := &models.Txmintinfo{
+				Txhash:        string(vLog.TxHash.String()),
+				Address:       mintEvent.Owner.String(),
+				Amount:        mintEvent.Amount.String(),
+				Tochainid:     vLog.Topics[3].Big().Int64(),
+				Originchainid: vLog.Topics[2].Big().Int64(),
+				Status:        "pending",
+				Burnid:        hex.EncodeToString(mintEvent.BurnId[:]),
+			}
+			mysql.SharedStore().AddTxMintInfo(tx)
 		}
-
 	}
-
 }
 
 func GetTxHash() (*[]models.Txhash, error) {

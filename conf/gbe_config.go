@@ -24,7 +24,7 @@ type DataSourceConfig struct {
 
 type ChainData struct {
 	WsRpc           string `json:"ws-rpc"`
-	ContractAddress string `json:"contract-Address"`
+	ContractAddress string `json:"bridge-contract"`
 	ChainId         int    `json:"chain-id"`
 }
 

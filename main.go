@@ -14,8 +14,8 @@ import (
 
 func main() {
 
-	chainService(conf.GetConfig().EthData.WsRpc, conf.GetConfig().EthData.ContractAddress, conf.GetConfig().EthData.ChainId)
-	// chainService(conf.GetConfig().BscData.WsRpc, conf.GetConfig().BscData.ContractAddress, conf.GetConfig().BscData.ChainId)
+	//chainService(conf.GetConfig().EthData.WsRpc, conf.GetConfig().EthData.ContractAddress, conf.GetConfig().EthData.ChainId)
+	chainService(conf.GetConfig().BscData.WsRpc, conf.GetConfig().BscData.ContractAddress, conf.GetConfig().BscData.ChainId)
 	// chainService(conf.GetConfig().CronosData.WsRpc, conf.GetConfig().CronosData.ContractAddress, conf.GetConfig().CronosData.ChainId)
 }
 
@@ -24,7 +24,7 @@ func chainService(wsRpc, contractAddress string, chainId int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	service.OpenTx(client)
+	service.OpenTx(client, chainId)
 
 	headers := make(chan *types.Header)
 	sub, err := client.SubscribeNewHead(context.Background(), headers)

@@ -25,13 +25,12 @@ var (
 
 const path = "ABI/bridgeABI.json"
 
-func OpenTx(client *ethclient.Client) {
-	tx, err := GetTxHash()
+func OpenTx(client *ethclient.Client, chainId int) {
+	tx, err := GetTxHash(chainId)
 	if err != nil || len((*tx)) == 0 {
 		return
 	}
 	for i := 0; i < len(*tx); i++ {
-		fmt.Println("Loop iterate:", i)
 		OpenLogs(client, (*tx)[i].TxHash)
 	}
 }
@@ -43,7 +42,6 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("receipt:")
 
 	File, err := ioutil.ReadFile(path)
 
@@ -51,7 +49,6 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("receipt:", receipt.Logs)
 
 	for _, vLog := range receipt.Logs {
 		fmt.Printf("Log Block Number: %d\n", vLog.BlockNumber)
@@ -105,6 +102,6 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 	}
 }
 
-func GetTxHash() (*[]models.Txhash, error) {
-	return mysql.SharedStore().GetTxHash()
+func GetTxHash(chainId int) (*[]models.Txhash, error) {
+	return mysql.SharedStore().GetTxHash(chainId)
 }

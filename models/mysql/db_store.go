@@ -17,9 +17,9 @@ func (s *Store) GetTxByHash(txHash string) (*models.Txhash, error) {
 	return &tx, err
 }
 
-func (s *Store) GetTxHash() (*[]models.Txhash, error) {
+func (s *Store) GetTxHash(chainId int) (*[]models.Txhash, error) {
 	var tx []models.Txhash
-	err := s.db.Raw("SELECT * FROM g_txhash").Scan(&tx).Error
+	err := s.db.Raw("SELECT * FROM g_txhash WHERE chainid=?", chainId).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}

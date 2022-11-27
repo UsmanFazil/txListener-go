@@ -7,7 +7,6 @@ import (
 )
 
 func SaveTx(txhash, contractAdd string, blockNumber uint, chainId int) (*models.Txhash, error) {
-
 	tx, err := GetTxByHash(txhash)
 	if err != nil {
 		return nil, err
@@ -52,7 +51,7 @@ func SaveLastConfirmed(blockNumber, chainId int, backUpSync bool) (*models.Block
 		blockNum.Blocksyncnum = blockNumber
 	}
 
-	blockNum.Syncstatus = 0
+	// blockNum.Syncstatus = 0
 	return mysql.SharedStore().UpdateSyncInfo(blockNum)
 }
 

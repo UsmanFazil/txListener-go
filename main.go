@@ -13,17 +13,19 @@ import (
 )
 
 func main() {
-	go chainService(conf.GetConfig().EthData.WsRpc, conf.GetConfig().EthData.ContractAddress, conf.GetConfig().EthData.ChainId)
-	go chainService(conf.GetConfig().BscData.WsRpc, conf.GetConfig().BscData.ContractAddress, conf.GetConfig().BscData.ChainId)
-	chainService(conf.GetConfig().CronosData.WsRpc, conf.GetConfig().CronosData.ContractAddress, conf.GetConfig().CronosData.ChainId)
+
+	go chainService(conf.GetConfig().EthData)
+	go chainService(conf.GetConfig().BscData)
+	chainService(conf.GetConfig().CronosData)
+
 }
 
-func chainService(wsRpc, contractAddress string, chainId int) {
-	client, err := ethclient.Dial(wsRpc)
+func chainService(chainInfo conf.ChainData) {
+	client, err := ethclient.Dial(chainInfo.WsRpc)
 	if err != nil {
 		log.Fatal(err)
 	}
-	service.OpenTx(client)
+	service.OpenTx(client, chainInfo.ChainId)
 
 	headers := make(chan *types.Header)
 	sub, err := client.SubscribeNewHead(context.Background(), headers)
@@ -31,7 +33,7 @@ func chainService(wsRpc, contractAddress string, chainId int) {
 		log.Fatal(err)
 	}
 
-	lastConfimedBlock, err := service.GetBlockInfobyChainId(chainId)
+	lastConfimedBlock, err := service.GetBlockInfobyChainId(chainInfo.ChainId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +45,7 @@ func chainService(wsRpc, contractAddress string, chainId int) {
 		case err := <-sub.Err():
 			log.Fatal(err)
 		case header := <-headers:
-			block, err := client.BlockByHash(context.Background(), header.Hash())
+			block, err := client.BlockByNumber(context.Background(), header.Number)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -56,9 +58,9 @@ func chainService(wsRpc, contractAddress string, chainId int) {
 					syncStartNum = uint64(lastConfimedBlock.Blocksyncnum)
 				}
 
-				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock, contractAddress, wsRpc, chainId)
+				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock, chainInfo.ContractAddress, chainInfo.WsRpc, chainInfo.ChainId)
 			}
-			go service.FindTx(block, false, contractAddress, chainId)
+			go service.FindTx(block, false, chainInfo.ContractAddress, chainInfo.ChainId)
 			firstRun = false
 		}
 	}

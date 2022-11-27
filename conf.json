@@ -1,18 +1,18 @@
 {
     "eth":{
       "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
-      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "bridge-contract": "0x05B831FA2B196F4036D7361E586795b1010F8B1f",
       "chain-id": 5 
     },
     "bsc":{
-      "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
-      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "ws-rpc": "wss://ws-nd-186-441-216.p2pify.com/5ce376816d1963db2884ce68878344fc",
+      "bridge-contract": "0x8e64092a998a081Cb044f02877FC5d1e455ce425",
       "chain-id": 97
     },
     "cronos":{
-      "ws-rpc": "wss://eth-goerli.g.alchemy.com/v2/wherzhKtAKhH2Aq98ozNRdelbCO8bws4",
+      "ws-rpc": "wss://ws-nd-526-396-026.p2pify.com/c1858c717e3a50d0c8a544b80e3c0cda",
       "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
-      "chain-id": 5
+      "chain-id": 338
     },
     "dataSource": {
         "driverName": "mysql",

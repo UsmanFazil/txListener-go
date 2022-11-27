@@ -17,9 +17,9 @@ func (s *Store) GetTxByHash(txHash string) (*models.Txhash, error) {
 	return &tx, err
 }
 
-func (s *Store) GetTxHash() (*[]models.Txhash, error) {
+func (s *Store) GetTxHash(chainId int) (*[]models.Txhash, error) {
 	var tx []models.Txhash
-	err := s.db.Raw("SELECT * FROM g_txhash").Scan(&tx).Error
+	err := s.db.Raw("SELECT * FROM g_txhash WHERE chainid=?", chainId).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -57,12 +57,14 @@ func (s *Store) AddTxMintInfo(dataInfo *models.Txmintinfo) error {
 }
 
 func (s *Store) AddTxBurnInfo(dataInfo *models.Txburninfo) error {
-	fmt.Println("dataInfo:", dataInfo)
 	return s.db.Create(dataInfo).Error
 }
 
 func (s *Store) UpdateSyncInfo(syncInfo *models.Blocksyncinfo) (*models.Blocksyncinfo, error) {
-	err := s.db.Model(&syncInfo).Update(&syncInfo).Error
+	fmt.Println("sync status in query", syncInfo.Syncstatus)
+	err := s.db.Raw("UPDATE g_blocksyncinfo SET blocksyncnum=?,syncstatus=?,backupsyncnum=? WHERE chainid=?",
+		syncInfo.Blocksyncnum, syncInfo.Syncstatus, syncInfo.Backupsyncnum, syncInfo.Chainid).Scan(&syncInfo).Error
+
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}

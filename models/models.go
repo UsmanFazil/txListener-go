@@ -21,24 +21,24 @@ type Blocksyncinfo struct {
 }
 
 type Txmintinfo struct {
-	Txhash      string
-	Address     string
-	Amount      *big.Int
-	Signature   string
-	Fromchainid *big.Int
-	Tochainid   *big.Int
-	Status      string
+	Txhash        string
+	Address       string
+	Amount        string
+	Burnid        string
+	Originchainid int64
+	Tochainid     int64
+	Status        string
 }
 
 type Txburninfo struct {
-	Txhash      string
-	Address     string
-	Amount      string
-	Signature   string
-	FromchainId int64
-	Tochainid   int64
-	Status      string
-	Burnid      string
+	Txhash        string
+	Address       string
+	Amount        string
+	Signature     string
+	Originchainid int64
+	Tochainid     int64
+	Status        string
+	Burnid        string
 }
 
 // LogBurn ..
@@ -48,6 +48,16 @@ type LogBurn struct {
 	OriginChainId *big.Int
 	ToChainId     *big.Int
 	BurnId        [32]byte
+}
+
+// LogMint ..
+type LogMint struct {
+	Owner         common.Address
+	Amount        *big.Int
+	OriginChainId *big.Int
+	ToChainId     *big.Int
+	BurnId        [32]byte
+	RefId         [32]byte
 }
 
 // LogApproval ..

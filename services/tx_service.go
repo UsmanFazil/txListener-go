@@ -51,7 +51,7 @@ func SaveLastConfirmed(blockNumber, chainId int, backUpSync bool) (*models.Block
 		blockNum.Blocksyncnum = blockNumber
 	}
 
-	blockNum.Syncstatus = 0
+	// blockNum.Syncstatus = 0
 	return mysql.SharedStore().UpdateSyncInfo(blockNum)
 }
 

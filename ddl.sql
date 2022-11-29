@@ -10,7 +10,7 @@ CREATE TABLE `g_blocksyncinfo` (
   `blocksyncnum`    bigint(20) NOT NULL,
   `syncstatus`      TINYINT,
   `backupsyncnum`   bigint(20) NOT NULL,
-  `chainId`     bigint(20) NOT NULL
+  `chainid`     bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `g_txmintinfo` (

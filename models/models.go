@@ -11,6 +11,7 @@ type Txhash struct {
 	Blocknum    int
 	Contractadd string
 	Chainid     int
+	completed   bool
 }
 
 type Blocksyncinfo struct {

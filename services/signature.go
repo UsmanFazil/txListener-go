@@ -4,12 +4,10 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"fmt"
-	"net/http"
 
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
-	"github.com/gin-gonic/gin"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
 )
 
@@ -23,9 +21,14 @@ func KeyGen() *ecdsa.PrivateKey {
 	return privateKey
 }
 
-func Sign(message string, key *ecdsa.PrivateKey) []byte {
+func Sign(originChainId, toChainId int64, contractAddress, refId, msgSender, amount string, key *ecdsa.PrivateKey) []byte {
 	// Turn the message into a 32-byte hash
-	hash := solsha3.SoliditySHA3(solsha3.String(message))
+	hash := solsha3.SoliditySHA3(
+		[]string{"uint256", "uint256", "address", "bytes32", "address", "uint256"},
+		[]interface{}{
+			originChainId, toChainId, contractAddress, refId, msgSender, amount,
+		},
+	)
 	// Prefix and then hash to mimic behavior of eth_sign
 	prefixed := solsha3.SoliditySHA3(solsha3.String("\x19Ethereum Signed Message:\n32"), solsha3.Bytes32(hash))
 	signature, err := secp256k1.Sign(prefixed, math.PaddedBigBytes(key.D, 32))
@@ -41,25 +44,15 @@ func Sign(message string, key *ecdsa.PrivateKey) []byte {
 	return signature
 }
 
-func main() {
-	router := gin.Default()
-	router.GET("/signature/:value", getSignature)
-	router.Run("localhost:8081")
-}
-
-func getSignature(c *gin.Context) {
-
+func getSignature(originChainId, toChainId int64, contractAddress, refId, msgSender, amount string) string {
+	fmt.Println("get")
 	key := KeyGen()
-	message := c.Param("value")
-
-	sig := Sign(message, key)
+	refId = "0x" + refId
+	sig := Sign(originChainId, toChainId, contractAddress, refId, msgSender, amount, key)
 
 	fmt.Println("address:", hex.EncodeToString(crypto.PubkeyToAddress(key.PublicKey).Bytes()))
 	fmt.Println("signature:", hex.EncodeToString(sig))
 	// c.IndentedJSON(http.StatusOK, hex.EncodeToString(sig))
-	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"data": "0x" + hex.EncodeToString(sig),
-	})
-	return
+
+	return hex.EncodeToString(sig)
 }

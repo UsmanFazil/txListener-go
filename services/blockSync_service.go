@@ -11,10 +11,11 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, contractAddress, wsRpc string, chainId int) {
+func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, contractAddress, wsRpc string, chainId int, ethClient *ethclient.Client) {
 	mysql.SharedStore().UpdateSyncInfo(blockInfo)
 	_, err := mysql.SharedStore().UpdateSyncStatus(0)
 	if err != nil {
+		fmt.Println("18 syncBlocks--------------", ethClient)
 		log.Fatal(err)
 	}
 
@@ -34,7 +35,7 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, co
 			log.Fatal(err)
 		}
 
-		go FindTx(block, true, contractAddress, chainId)
+		go FindTx(block, true, contractAddress, chainId, ethClient)
 		blockNumber.Add(blockNumber, big.NewInt(int64(1)))
 	}
 

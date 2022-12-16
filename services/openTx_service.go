@@ -8,6 +8,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/block-listener/conf"
 	"github.com/block-listener/models"
 	"github.com/block-listener/models/mysql"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -30,15 +31,17 @@ func OpenTx(client *ethclient.Client, chainId int) {
 	if err != nil || len((*tx)) == 0 {
 		return
 	}
+
 	for i := 0; i < len(*tx); i++ {
 		OpenLogs(client, (*tx)[i].TxHash)
 	}
 }
+
 func OpenLogs(client *ethclient.Client, singletxHash string) {
 
 	txHash := common.HexToHash(singletxHash)
-	fmt.Println("txHash:", txHash)
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -49,7 +52,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("receipt.Logs:", receipt.Logs)
 	for _, vLog := range receipt.Logs {
 		fmt.Printf("Log Block Number: %d\n", vLog.BlockNumber)
 		fmt.Printf("Log Index: %d\n", vLog.Index)
@@ -76,7 +79,10 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 				Burnid:        hex.EncodeToString(burnEvent.BurnId[:]),
 			}
 
+			contractAddress := getContractAddress(tx.Originchainid)
+			tx.Signature = getSignature(tx.Originchainid, tx.Tochainid, contractAddress, tx.Burnid, tx.Address, burnEvent.Amount.String())
 			mysql.SharedStore().AddTxBurnInfo(tx)
+
 		case logMintSigHash.Hex():
 			fmt.Printf("Log Name: Mint\n")
 
@@ -97,11 +103,28 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 				Status:        "pending",
 				Burnid:        hex.EncodeToString(mintEvent.BurnId[:]),
 			}
+
 			mysql.SharedStore().AddTxMintInfo(tx)
 		}
 	}
+
+	mysql.SharedStore().UpdateTxHash(singletxHash, true)
+
 }
 
 func GetTxHash(chainId int) (*[]models.Txhash, error) {
 	return mysql.SharedStore().GetTxHash(chainId)
+}
+
+func getContractAddress(chainId int64) string {
+	var contractAddress string
+	if int64(conf.GetConfig().BscData.ChainId) == chainId {
+		contractAddress = conf.GetConfig().BscData.ContractAddress
+	} else if int64(conf.GetConfig().CronosData.ChainId) == chainId {
+		contractAddress = conf.GetConfig().CronosData.ContractAddress
+	} else if int64(conf.GetConfig().EthData.ChainId) == chainId {
+		contractAddress = conf.GetConfig().EthData.ContractAddress
+	}
+
+	return contractAddress
 }

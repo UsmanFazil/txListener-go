@@ -19,10 +19,11 @@ func (s *Store) GetTxByHash(txHash string) (*models.Txhash, error) {
 
 func (s *Store) GetTxHash(chainId int) (*[]models.Txhash, error) {
 	var tx []models.Txhash
-	err := s.db.Raw("SELECT * FROM g_txhash WHERE chainid=?", chainId).Scan(&tx).Error
+	err := s.db.Raw("SELECT * FROM g_txhash WHERE chainid=? and completed=?", chainId, false).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
+
 	return &tx, err
 }
 
@@ -48,6 +49,20 @@ func (s *Store) GetBlockInfobyChainId(chainId int) (*models.Blocksyncinfo, error
 	return &lastconfirmedNum, err
 }
 
+func (s *Store) UpdateTxHash(TxHash string, status bool) error {
+	var tx models.Txhash
+
+	err := s.db.Raw("UPDATE g_txhash SET completed=? WHERE txHash=?",
+		status, TxHash).Scan(&tx).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	fmt.Println("Updated Transaction:", tx)
+
+	return err
+}
+
 func (s *Store) AddBlockSyncInfo(lastconfirmedNum *models.Blocksyncinfo) error {
 	return s.db.Create(lastconfirmedNum).Error
 }
@@ -61,7 +76,6 @@ func (s *Store) AddTxBurnInfo(dataInfo *models.Txburninfo) error {
 }
 
 func (s *Store) UpdateSyncInfo(syncInfo *models.Blocksyncinfo) (*models.Blocksyncinfo, error) {
-	fmt.Println("sync status in query", syncInfo.Syncstatus)
 	err := s.db.Raw("UPDATE g_blocksyncinfo SET blocksyncnum=?,syncstatus=?,backupsyncnum=? WHERE chainid=?",
 		syncInfo.Blocksyncnum, syncInfo.Syncstatus, syncInfo.Backupsyncnum, syncInfo.Chainid).Scan(&syncInfo).Error
 

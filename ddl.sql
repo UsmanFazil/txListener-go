@@ -3,6 +3,7 @@ CREATE TABLE `g_txhash` (
   `blocknum`    bigint(20) NOT NULL,
   `contractadd` varchar(255) NOT NULL,
   `chainid`     bigint(20) NOT NULL,
+  `completed`   boolean not null default 0,
   PRIMARY KEY (`txhash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -10,6 +10,7 @@ type Store interface {
 	GetTxByHash(txHash string) (*Txhash, error)
 	GetTxHash(chainId int) (*[]Txhash, error)
 	AddTx(*Txhash) error
+	UpdateTxHash(TxHash string, status bool) error
 
 	GetBlockSyncInfo() (*Blocksyncinfo, error)
 	GetBlockInfobyChainId(int) (*Blocksyncinfo, error)

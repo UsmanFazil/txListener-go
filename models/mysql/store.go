@@ -6,6 +6,7 @@ import (
 
 	"github.com/block-listener/conf"
 	"github.com/block-listener/models"
+	"github.com/block-listener/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -13,6 +14,7 @@ import (
 var gdb *gorm.DB
 var store models.Store
 var storeOnce sync.Once
+var dbPass = utils.GetDBPass()
 
 type Store struct {
 	db *gorm.DB
@@ -39,7 +41,7 @@ func initDb() error {
 	cfg := conf.GetConfig()
 
 	url := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8&parseTime=True&loc=Local",
-		cfg.DataSource.User, cfg.DataSource.Password, cfg.DataSource.Addr, cfg.DataSource.Database)
+		cfg.DataSource.User, dbPass, cfg.DataSource.Addr, cfg.DataSource.Database)
 	var err error
 	gdb, err = gorm.Open(cfg.DataSource.DriverName, url)
 	if err != nil {

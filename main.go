@@ -21,6 +21,7 @@ func main() {
 }
 
 func chainService(chainInfo conf.ChainData) {
+	fmt.Println("service started, chain ID: ", chainInfo.ChainId)
 	client, err := ethclient.Dial(chainInfo.WsRpc)
 	if err != nil {
 		log.Fatal(err)

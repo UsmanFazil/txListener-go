@@ -12,9 +12,19 @@ func (s *Store) GetTxByHash(txHash string) (*models.Txhash, error) {
 	var tx models.Txhash
 	err := s.db.Raw("SELECT * FROM g_txhash WHERE txhash=?", txHash).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, nil
+		return nil, err
 	}
 	return &tx, err
+}
+
+func (s *Store) GetTxBurnbyUserAddr(userAddr string) ([]*models.Txburninfo, error) {
+	var tx []*models.Txburninfo
+	err := s.db.Raw("SELECT * FROM g_txburninfo WHERE address=?", userAddr).Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return tx, err
 }
 
 func (s *Store) GetTxHash(chainId int) (*[]models.Txhash, error) {
@@ -22,6 +32,16 @@ func (s *Store) GetTxHash(chainId int) (*[]models.Txhash, error) {
 	err := s.db.Raw("SELECT * FROM g_txhash WHERE chainid=? and completed=?", chainId, false).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
+	}
+
+	return &tx, err
+}
+
+func (s *Store) GetTxBurnInfo(txHash string) (*models.Txburninfo, error) {
+	var tx models.Txburninfo
+	err := s.db.Raw("SELECT * FROM g_txburninfo WHERE txhash=?", txHash).Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
 	}
 
 	return &tx, err

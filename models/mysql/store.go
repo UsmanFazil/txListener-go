@@ -6,7 +6,6 @@ import (
 
 	"github.com/block-listener/conf"
 	"github.com/block-listener/models"
-	"github.com/block-listener/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -14,7 +13,9 @@ import (
 var gdb *gorm.DB
 var store models.Store
 var storeOnce sync.Once
-var dbPass = utils.GetDBPass()
+
+// var dbPass = utils.GetDBPass()
+var dbPass = "password"
 
 type Store struct {
 	db *gorm.DB

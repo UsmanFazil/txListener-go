@@ -18,7 +18,8 @@ func main() {
 	go chainService(conf.GetConfig().BscData)
 	go chainService(conf.GetConfig().CronosData)
 
-	http.HandleFunc("/getUserTx", service.GetUserTx)
+	http.HandleFunc("/getUserInfo", service.GetUserInfo)
+	http.HandleFunc("/getTx", service.GetTxwithSignature)
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {

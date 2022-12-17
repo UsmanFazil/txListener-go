@@ -31,17 +31,6 @@ type Txmintinfo struct {
 	Status        string
 }
 
-type Txburninfo struct {
-	Txhash        string
-	Address       string
-	Amount        string
-	Signature     string
-	Originchainid int64
-	Tochainid     int64
-	Status        string
-	Burnid        string
-}
-
 // LogBurn ..
 type LogBurn struct {
 	Owner         common.Address
@@ -66,4 +55,33 @@ type LogApproval struct {
 	TokenOwner common.Address
 	Spender    common.Address
 	Tokens     *big.Int
+}
+
+type GetInfoVo struct {
+	Originchainid int64
+	Tochainid     int64
+	Amount        string
+	Transaction   string
+	Useraddress   string
+}
+
+type Txburninfo struct {
+	Txhash        string
+	Address       string
+	Amount        string
+	Signature     string
+	Originchainid int64
+	Tochainid     int64
+	Status        string
+	Burnid        string
+}
+
+func UserInfoVo(product *Txburninfo) *GetInfoVo {
+	return &GetInfoVo{
+		Originchainid: product.Originchainid,
+		Tochainid:     product.Tochainid,
+		Amount:        product.Amount,
+		Transaction:   product.Txhash,
+		Useraddress:   product.Address,
+	}
 }

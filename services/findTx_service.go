@@ -10,13 +10,13 @@ import (
 func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId int, client *ethclient.Client) {
 	openFlag := false
 	for _, tx := range block.Transactions() {
-
 		if tx.To() == nil {
 			continue
 		}
 
 		if tx.To().String() == contractAddress {
 			fmt.Println("matched------------------")
+
 			openFlag = true
 			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()), chainId)
 		}

@@ -12,8 +12,8 @@
       "block-conf": 10
     },
     "cronos":{
-      "ws-rpc": "wss://ws-nd-959-691-997.p2pify.com/cd8597b1d64cb9148c8b620e214f1d7e",
-      "bridge-contract": "0x15742CCa64A96EbBCCB45900929e3bA0490233aE",
+      "ws-rpc": "wss://ws-nd-148-408-905.p2pify.com/9a512c21f60ee41f313335c3bedada83",
+      "bridge-contract": "0x8F51a57e0fc0c9B910DA187D0afB362b4dad3a3B",
       "chain-id": 338,
       "block-conf": 15
     },

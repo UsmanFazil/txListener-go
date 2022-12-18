@@ -7,10 +7,9 @@ import (
 )
 
 func SaveTx(txhash, contractAdd string, blockNumber uint, chainId int) (*models.Txhash, error) {
-	tx, err := GetTxByHash(txhash)
-	if err != nil {
-		return nil, err
-	}
+
+	tx, _ := GetTxByHash(txhash)
+
 	if tx != nil {
 		return nil, errors.New("tx hash already saved")
 	}
@@ -21,6 +20,7 @@ func SaveTx(txhash, contractAdd string, blockNumber uint, chainId int) (*models.
 		Contractadd: contractAdd,
 		Chainid:     chainId,
 	}
+
 	return tx, mysql.SharedStore().AddTx(tx)
 }
 

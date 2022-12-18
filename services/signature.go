@@ -14,16 +14,6 @@ import (
 
 var pk = keyGen(utils.GetPK())
 
-func KeyGen() *ecdsa.PrivateKey {
-	privateKey, err := crypto.HexToECDSA("b4f17b38aacf6f4f529e20195438cbdcf360823b9322475ed023e26206fc49f6")
-
-	if err != nil {
-		panic(err)
-	}
-
-	return privateKey
-}
-
 func Sign(originChainId, toChainId int64, contractAddress, refId, msgSender, amount string, key *ecdsa.PrivateKey) []byte {
 	// Turn the message into a 32-byte hash
 	hash := solsha3.SoliditySHA3(

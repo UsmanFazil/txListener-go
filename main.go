@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+
 	go chainService(conf.GetConfig().EthData)
 	go chainService(conf.GetConfig().BscData)
 	go chainService(conf.GetConfig().CronosData)

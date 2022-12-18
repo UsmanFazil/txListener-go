@@ -14,6 +14,7 @@ import (
 var gdb *gorm.DB
 var store models.Store
 var storeOnce sync.Once
+
 var dbPass = utils.GetDBPass()
 
 type Store struct {

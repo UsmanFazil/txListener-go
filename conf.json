@@ -22,7 +22,7 @@
         "addr": "127.0.0.1:3306",
         "database": "listener",
         "user": "root",
-        "password": "",
+        "password": "password",
         "enableAutoMigrate": false
       }
 }

@@ -21,4 +21,8 @@ type Store interface {
 
 	AddTxMintInfo(*Txmintinfo) error
 	AddTxBurnInfo(*Txburninfo) error
+	GetTxBurnInfo(txHash string) (*Txburninfo, error)
+	GetTxBurnbyUserAddr(userAddr string) ([]*Txburninfo, error)
+
+	//GetTxMintInfo(txHash string) (*Txmintinfo, error)
 }

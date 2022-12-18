@@ -5,11 +5,14 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	"github.com/block-listener/utils"
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	solsha3 "github.com/miguelmota/go-solidity-sha3"
 )
+
+var pk = keyGen(utils.GetPK())
 
 func KeyGen() *ecdsa.PrivateKey {
 	privateKey, err := crypto.HexToECDSA("b4f17b38aacf6f4f529e20195438cbdcf360823b9322475ed023e26206fc49f6")
@@ -45,14 +48,23 @@ func Sign(originChainId, toChainId int64, contractAddress, refId, msgSender, amo
 }
 
 func getSignature(originChainId, toChainId int64, contractAddress, refId, msgSender, amount string) string {
-	fmt.Println("get")
-	key := KeyGen()
-	refId = "0x" + refId
-	sig := Sign(originChainId, toChainId, contractAddress, refId, msgSender, amount, key)
 
-	fmt.Println("address:", hex.EncodeToString(crypto.PubkeyToAddress(key.PublicKey).Bytes()))
-	fmt.Println("signature:", hex.EncodeToString(sig))
-	// c.IndentedJSON(http.StatusOK, hex.EncodeToString(sig))
+	refId = "0x" + refId
+	sig := Sign(originChainId, toChainId, contractAddress, refId, msgSender, amount, pk)
+
+	// fmt.Println("address:", hex.EncodeToString(crypto.PubkeyToAddress(pk.PublicKey).Bytes()))
+	// fmt.Println("signature:", hex.EncodeToString(sig))
 
 	return hex.EncodeToString(sig)
+}
+
+func keyGen(pkString string) *ecdsa.PrivateKey {
+	privateKey, err := crypto.HexToECDSA(pkString)
+
+	if err != nil {
+		fmt.Println("private key type casting failed")
+		panic(err)
+	}
+
+	return privateKey
 }

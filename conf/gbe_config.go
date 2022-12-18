@@ -26,6 +26,7 @@ type ChainData struct {
 	WsRpc           string `json:"ws-rpc"`
 	ContractAddress string `json:"bridge-contract"`
 	ChainId         int    `json:"chain-id"`
+	BlockConf       int    `json:"block-conf"`
 }
 
 var config GbeConfig

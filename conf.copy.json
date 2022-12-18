@@ -1,15 +1,21 @@
 {
   "eth":{
     "ws-rpc": "",
-    "bridge-contract": ""
+    "bridge-contract": "",
+    "chain-id": 0,
+    "block-conf":0
   },
   "bsc":{
     "ws-rpc": "",
-    "bridge-contract": ""
+    "bridge-contract": "",
+    "chain-id": 0,
+    "block-conf":0
   },
   "cronos":{
     "ws-rpc": "",
-    "bridge-contract": ""
+    "bridge-contract": "",
+    "chain-id": 0,
+    "block-conf":0
   },
     "dataSource": {
         "driverName": "",

@@ -32,7 +32,7 @@ func chainService(chainInfo conf.ChainData) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// service.OpenTx(client, chainInfo.ChainId)
+	service.OpenTx(client, chainInfo.ChainId)
 
 	headers := make(chan *types.Header)
 	sub, err := client.SubscribeNewHead(context.Background(), headers)

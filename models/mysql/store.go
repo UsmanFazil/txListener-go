@@ -49,8 +49,8 @@ func initDb() error {
 	}
 
 	gdb.SingularTable(true)
-	gdb.DB().SetMaxIdleConns(10)
-	gdb.DB().SetMaxOpenConns(50)
+	gdb.DB().SetMaxIdleConns(50)
+	gdb.DB().SetMaxOpenConns(100)
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "g_" + defaultTableName

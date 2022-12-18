@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -66,7 +65,6 @@ func GetPK() string {
 		log.Fatalf("Vault: data assertion failed")
 	}
 
-	fmt.Println(value)
 	return value
 
 }

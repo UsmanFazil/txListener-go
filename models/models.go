@@ -7,7 +7,8 @@ import (
 )
 
 type Txhash struct {
-	TxHash      string `gorm:"column:txhash;primary_key"`
+	Id          int `gorm:"column:id;primary_key;AUTO_INCREMENT"`
+	Txhash      string
 	Blocknum    int
 	Contractadd string
 	Chainid     int
@@ -66,7 +67,8 @@ type GetInfoVo struct {
 }
 
 type Txburninfo struct {
-	Txhash        string
+	Txhash        string `gorm:"column:txhash;primary_key"`
+	Txhashid      int
 	Address       string
 	Amount        string
 	Signature     string

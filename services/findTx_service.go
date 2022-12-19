@@ -14,21 +14,25 @@ func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId
 			continue
 		}
 
-		if tx.To().String() == contractAddress {
-			fmt.Println("matched------------------")
+		// if tx.To().String() == contractAddress {
+		fmt.Println("matched------------------")
 
-			openFlag = true
-			SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()), chainId)
-		}
+		openFlag = true
+		SaveTx(tx.Hash().String(), contractAddress, uint(block.Number().Uint64()), chainId)
+		// }
 	}
 
 	SaveLastConfirmed(int(block.Number().Int64()), chainId, backupSync)
 
 	fmt.Println("Block parsed : ", block.Number().Uint64())
 	if openFlag {
-		go OpenTx(client, chainId)
+		// go OpenTx(client, chainId)
 	}
 	// signatureService();// 10000
+
+}
+
+func blockConf() {
 
 }
 

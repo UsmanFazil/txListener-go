@@ -15,7 +15,7 @@ func SaveTx(txhash, contractAdd string, blockNumber uint, chainId int) (*models.
 	}
 
 	tx = &models.Txhash{
-		TxHash:      txhash,
+		Txhash:      txhash,
 		Blocknum:    int(blockNumber),
 		Contractadd: contractAdd,
 		Chainid:     chainId,

@@ -33,11 +33,11 @@ func OpenTx(client *ethclient.Client, chainId int) {
 	}
 
 	for i := 0; i < len(*tx); i++ {
-		OpenLogs(client, (*tx)[i].TxHash)
+		OpenLogs(client, (*tx)[i].Txhash, (*tx)[i].Id)
 	}
 }
 
-func OpenLogs(client *ethclient.Client, singletxHash string) {
+func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 
 	txHash := common.HexToHash(singletxHash)
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
@@ -76,11 +76,12 @@ func OpenLogs(client *ethclient.Client, singletxHash string) {
 				Tochainid:     vLog.Topics[3].Big().Int64(),
 				Originchainid: vLog.Topics[2].Big().Int64(),
 				Status:        "pending",
+				Txhashid:      txhashid,
 				Burnid:        hex.EncodeToString(burnEvent.BurnId[:]),
 			}
 
-			contractAddress := getContractAddress(tx.Originchainid)
-			tx.Signature = getSignature(tx.Originchainid, tx.Tochainid, contractAddress, tx.Burnid, tx.Address, burnEvent.Amount.String())
+			// contractAddress := getContractAddress(tx.Originchainid)
+			// tx.Signature = getSignature(tx.Originchainid, tx.Tochainid, contractAddress, tx.Burnid, tx.Address, burnEvent.Amount.String())
 			mysql.SharedStore().AddTxBurnInfo(tx)
 
 		case logMintSigHash.Hex():

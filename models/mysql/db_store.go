@@ -47,6 +47,16 @@ func (s *Store) GetTxBurnInfo(txHash string) (*models.Txburninfo, error) {
 	return &tx, err
 }
 
+func (s *Store) GetPendingTx(txHash string) (*models.Txburninfo, error) {
+	var tx models.Txburninfo
+	err := s.db.Raw("SELECT * FROM a g_txburninfo,b g_txhash WHERE a.status='pending' AND a.id = b.txhashid AND b.blocknum<? ", txHash).Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &tx, err
+}
+
 func (s *Store) AddTx(tx *models.Txhash) error {
 	return s.db.Create(tx).Error
 }

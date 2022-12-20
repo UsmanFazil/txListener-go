@@ -47,14 +47,14 @@ func (s *Store) GetTxBurnInfo(txHash string) (*models.Txburninfo, error) {
 	return &tx, err
 }
 
-func (s *Store) GetPendingTx(txHash string) (*models.Txburninfo, error) {
-	var tx models.Txburninfo
-	err := s.db.Raw("SELECT * FROM a g_txburninfo,b g_txhash WHERE a.status='pending' AND a.id = b.txhashid AND b.blocknum<? ", txHash).Scan(&tx).Error
+func (s *Store) GetPendingTx(blocknum, chainId int) ([]models.Txpendinginfo, error) {
+	var tx []models.Txpendinginfo
+	err := s.db.Raw("SELECT * FROM g_txburninfo AS a, g_txhash AS b WHERE a.status='pending' AND b.id = a.txhashid AND b.blocknum<=? and b.chainid=?", blocknum, chainId).Scan(&tx).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, err
 	}
 
-	return &tx, err
+	return tx, err
 }
 
 func (s *Store) AddTx(tx *models.Txhash) error {
@@ -84,6 +84,19 @@ func (s *Store) UpdateTxHash(TxHash string, status bool) error {
 
 	err := s.db.Raw("UPDATE g_txhash SET completed=? WHERE txHash=?",
 		status, TxHash).Scan(&tx).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	fmt.Println("Updated Transaction:", tx)
+
+	return err
+}
+
+func (s *Store) UpdateTxBurnInfo(TxHash, signature string) error {
+	var tx models.Txburninfo
+
+	err := s.db.Raw("UPDATE g_txburninfo SET status=?,  signature=? WHERE txhash=?", "signed", signature, TxHash).Scan(&tx).Error
 
 	if err == gorm.ErrRecordNotFound {
 		return nil

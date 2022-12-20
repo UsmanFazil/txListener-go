@@ -11,7 +11,7 @@ type Store interface {
 	GetTxHash(chainId int) (*[]Txhash, error)
 	AddTx(*Txhash) error
 	UpdateTxHash(TxHash string, status bool) error
-
+	GetPendingTx(blocknum, chainid int) ([]Txpendinginfo, error)
 	GetBlockSyncInfo() (*Blocksyncinfo, error)
 	GetBlockInfobyChainId(int) (*Blocksyncinfo, error)
 	AddBlockSyncInfo(*Blocksyncinfo) error
@@ -21,6 +21,7 @@ type Store interface {
 
 	AddTxMintInfo(*Txmintinfo) error
 	AddTxBurnInfo(*Txburninfo) error
+	UpdateTxBurnInfo(TxHash, signature string) error
 	GetTxBurnInfo(txHash string) (*Txburninfo, error)
 	GetTxBurnbyUserAddr(userAddr string) ([]*Txburninfo, error)
 

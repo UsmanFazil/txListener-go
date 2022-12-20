@@ -78,6 +78,20 @@ type Txburninfo struct {
 	Burnid        string
 }
 
+type Txpendinginfo struct {
+	Txhash        string `gorm:"column:txhash;primary_key"`
+	Txhashid      int
+	Address       string
+	Amount        string
+	Signature     string
+	Originchainid int64
+	Tochainid     int64
+	Status        string
+	Burnid        string
+	Blocknum      int
+	Contractadd   string
+}
+
 func UserInfoVo(product *Txburninfo) *GetInfoVo {
 	return &GetInfoVo{
 		Originchainid: product.Originchainid,

@@ -53,10 +53,12 @@ func chainService(chainInfo conf.ChainData) {
 		select {
 		case err := <-sub.Err():
 			fmt.Println("restarting service of chain id", chainInfo.ChainId, "and error is:", err)
+			chainService(chainInfo)
 		case header := <-headers:
 			block, err := client.BlockByNumber(context.Background(), header.Number)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("error in GetBlockByNumber:", err)
+				continue
 			}
 			fmt.Println("New block :", block.Number().Uint64())
 

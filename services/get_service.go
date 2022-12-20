@@ -1,30 +1,35 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 
 	"github.com/block-listener/models"
 	"github.com/block-listener/models/mysql"
+	"github.com/pkg/errors"
 )
 
 func GetUserInfo(w http.ResponseWriter, r *http.Request) {
-	useraddress := r.URL.Query().Get("useraddress")
+	useraddress := r.URL.Query().Get("userAddress")
 	fmt.Println("useraddress =>", useraddress)
 
 	if len(useraddress) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "No response")
+		writeJSON(w, nil, errors.New("userAddress Parameter Required"))
 		return
 	}
 
 	resp, err := mysql.SharedStore().GetTxBurnbyUserAddr(useraddress)
-	if err != nil {
+	fmt.Println("resp, err:", resp, err, len(resp))
+	if err != nil || len(resp) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "No response")
+		writeJSON(w, nil, errors.New("record not found"))
 		return
 	}
 	var getAllInfo []*models.GetInfoVo
@@ -32,13 +37,8 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	for _, product := range resp {
 		getAllInfo = append(getAllInfo, models.UserInfoVo(product))
 	}
-	body, err := json.Marshal(getAllInfo)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Write(body)
+	writeJSON(w, getAllInfo, nil)
 	return
 }
 
@@ -49,7 +49,7 @@ func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
 	if len(txHash) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "No response")
+		writeJSON(w, nil, errors.New("txHash Parameter Required"))
 		return
 	}
 
@@ -57,27 +57,28 @@ func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "No response")
+		writeJSON(w, nil, err)
 		return
 	}
 	respBurn, err := mysql.SharedStore().GetTxBurnInfo(txHash)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "No response")
+		writeJSON(w, nil, err)
 		return
 	}
 
 	w.WriteHeader(http.StatusFound)
 	w.Header().Set("Content-Type", "application/json")
 
-	body, err := json.Marshal(struct {
+	writeJSON(w, struct {
 		Contractaddress string `json:"Contractaddress"`
 		Originchainid   int64  `json:"Originchainid"`
 		Tochainid       int64  `json:"Tochainid"`
 		Amount          string `json:"Amount"`
 		Transaction     string `json:"Transaction"`
 		Signature       string `json:"Signature"`
+		UserAddress     string `json:"UserAddress"`
 	}{
 		Contractaddress: resp.Contractadd,
 		Originchainid:   respBurn.Originchainid,
@@ -85,13 +86,43 @@ func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
 		Amount:          respBurn.Amount,
 		Transaction:     respBurn.Txhash,
 		Signature:       respBurn.Signature,
-	})
+		UserAddress:     respBurn.Address,
+	}, nil)
 
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	w.Write(body)
-
 	return
+}
+
+type errResp struct {
+	Error struct {
+		Message string `json:"message"`
+	} `json:"error"`
+}
+
+func writeJSON(w http.ResponseWriter, v interface{}, err error) {
+	var respVal interface{}
+	if err != nil {
+		msg := err.Error()
+
+		w.WriteHeader(http.StatusBadRequest)
+		var e errResp
+		e.Error.Message = msg
+		respVal = e
+	} else {
+		respVal = v
+	}
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(respVal); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("json.NewEncoder.Encode: %v", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	if _, err := io.Copy(w, &buf); err != nil {
+		log.Printf("io.Copy: %v", err)
+		return
+	}
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"strings"
 
 	"github.com/block-listener/conf"
@@ -50,7 +49,8 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 
 	contractAbi, err := abi.JSON(strings.NewReader(string(File)))
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("error in Contract ABI:", err)
+		return
 	}
 	fmt.Println("receipt.Logs:", receipt.Logs)
 	for _, vLog := range receipt.Logs {
@@ -109,7 +109,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 		}
 	}
 
-	mysql.SharedStore().UpdateTxHash(singletxHash, true)
+	//mysql.SharedStore().UpdateTxHash(singletxHash, true)
 
 }
 

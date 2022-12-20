@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"log"
 	"math/big"
 
 	"github.com/block-listener/models"
@@ -15,14 +14,15 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, co
 	mysql.SharedStore().UpdateSyncInfo(blockInfo)
 	_, err := mysql.SharedStore().UpdateSyncStatus(0)
 	if err != nil {
-		fmt.Println("18 syncBlocks--------------", ethClient)
-		log.Fatal(err)
+		fmt.Println("error in syncBlocks", err)
+		return
 	}
 
 	client, err := ethclient.Dial(wsRpc)
 	ctx := context.Background()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("error in syncBlocks", err)
+		return
 	}
 
 	blockNumber := big.NewInt(int64(startBlock))
@@ -32,7 +32,8 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, co
 
 		block, err := client.BlockByNumber(ctx, blockNumber)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println("error in syncBlocks", err)
+			return
 		}
 
 		go FindTx(block, true, contractAddress, chainId, ethClient)

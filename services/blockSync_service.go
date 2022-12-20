@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/block-listener/models"
 	"github.com/block-listener/models/mysql"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, contractAddress, wsRpc string, chainId int, ethClient *ethclient.Client) {
-	mysql.SharedStore().UpdateSyncInfo(blockInfo)
+func SyncBlocks(startBlock, endBlock uint64, contractAddress, wsRpc string, chainId int, ethClient *ethclient.Client) {
+
 	_, err := mysql.SharedStore().UpdateSyncStatus(0)
 	if err != nil {
 		fmt.Println("error in syncBlocks", err)
@@ -28,7 +27,7 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, co
 	blockNumber := big.NewInt(int64(startBlock))
 	fmt.Println("startBlock:", startBlock, "endBlock", endBlock)
 
-	for i := startBlock; i <= endBlock; i++ {
+	for i := startBlock; i < endBlock; i++ {
 
 		block, err := client.BlockByNumber(ctx, blockNumber)
 		if err != nil {
@@ -40,7 +39,12 @@ func SyncBlocks(startBlock, endBlock uint64, blockInfo *models.Blocksyncinfo, co
 		blockNumber.Add(blockNumber, big.NewInt(int64(1)))
 	}
 
-	fmt.Println("All sync threads initiated")
-	blockInfo.Syncstatus = 1
-	mysql.SharedStore().UpdateSyncInfo(blockInfo)
+	_, err = mysql.SharedStore().UpdateSyncStatus(1)
+	if err != nil {
+		fmt.Println("error in syncBlocks", err)
+		return
+	}
+
+	fmt.Println("Back up sync completed for :", chainId)
+
 }

@@ -25,7 +25,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp, err := mysql.SharedStore().GetTxBurnbyUserAddr(useraddress)
-	fmt.Println("resp, err:", resp, err, len(resp))
+
 	if err != nil || len(resp) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")

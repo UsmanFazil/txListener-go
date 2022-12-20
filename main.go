@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/block-listener/conf"
 	service "github.com/block-listener/services"
@@ -17,15 +16,8 @@ func main() {
 
 	go chainService(conf.GetConfig().EthData)
 	go chainService(conf.GetConfig().BscData)
-	go chainService(conf.GetConfig().CronosData)
+	chainService(conf.GetConfig().CronosData)
 
-	http.HandleFunc("/getUserInfo", service.GetUserInfo)
-	http.HandleFunc("/getTx", service.GetTxwithSignature)
-
-	fmt.Printf("Starting server at port 8080\n")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
 }
 
 func chainService(chainInfo conf.ChainData) {

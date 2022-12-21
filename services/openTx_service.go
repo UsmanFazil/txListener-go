@@ -40,6 +40,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 
 	txHash := common.HexToHash(singletxHash)
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
+	block, _ := client.BlockByNumber(context.Background(), receipt.BlockNumber)
 
 	if err != nil {
 		fmt.Println(err)
@@ -76,6 +77,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 				Tochainid:     vLog.Topics[3].Big().Int64(),
 				Originchainid: vLog.Topics[2].Big().Int64(),
 				Status:        "pending",
+				Txtime:        block.Time(),
 				Txhashid:      txhashid,
 				Burnid:        hex.EncodeToString(burnEvent.BurnId[:]),
 			}

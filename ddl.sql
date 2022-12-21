@@ -36,8 +36,14 @@ CREATE TABLE `g_txburninfo` (
   `signature` varchar(255)  DEFAULT NULL,
   `originchainid`   bigint(15)    NOT NULL,
   `tochainid`   bigint(15)    NOT NULL,   
+   `txtime`    bigint(64)    NOT NULL, 
   `status`    varchar(15) NOT NULL,
   `burnid`    varchar(255) NOT NULL,
   PRIMARY KEY (`txhash`),
   FOREIGN KEY (`txhashid`) REFERENCES g_txhash(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+ //  
+block.Time()

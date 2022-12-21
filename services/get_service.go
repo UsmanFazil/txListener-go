@@ -14,6 +14,7 @@ import (
 )
 
 func GetUserInfo(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	useraddress := r.URL.Query().Get("userAddress")
 	fmt.Println("useraddress =>", useraddress)
 
@@ -43,6 +44,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	txHash := r.URL.Query().Get("txHash")
 	fmt.Println("txHash =>", txHash)
 
@@ -125,4 +127,8 @@ func writeJSON(w http.ResponseWriter, v interface{}, err error) {
 		log.Printf("io.Copy: %v", err)
 		return
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

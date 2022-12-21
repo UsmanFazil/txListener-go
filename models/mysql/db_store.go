@@ -106,6 +106,19 @@ func (s *Store) UpdateTxBurnInfo(TxHash, signature string) error {
 	return err
 }
 
+func (s *Store) UpdateTxBurnInfoMinted(burnid string, chainId int) error {
+	var tx models.Txburninfo
+
+	err := s.db.Raw("UPDATE g_txburninfo SET status=? WHERE burnid=? and originchainid=?", "minted", burnid, chainId).Scan(&tx).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return nil
+	}
+	fmt.Println("Updated Transaction:", tx)
+
+	return err
+}
+
 func (s *Store) AddBlockSyncInfo(lastconfirmedNum *models.Blocksyncinfo) error {
 	return s.db.Create(lastconfirmedNum).Error
 }

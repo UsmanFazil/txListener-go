@@ -106,7 +106,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 				Status:        "pending",
 				Burnid:        hex.EncodeToString(mintEvent.BurnId[:]),
 			}
-
+			mysql.SharedStore().UpdateTxBurnInfoMinted(tx.Burnid, int(tx.Originchainid))
 			mysql.SharedStore().AddTxMintInfo(tx)
 		}
 	}

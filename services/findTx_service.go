@@ -31,14 +31,12 @@ func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId
 	if openFlag {
 		go OpenTx(client, chainId)
 	}
-	blockConf(block.Number().Int64(), client, chainId)
-	// signatureService();// 10000
+
+	go blockConf(block.Number().Int64(), client, chainId)
 }
 
 func blockConf(blocknum int64, client *ethclient.Client, chainId int) {
 
-	// check chain id in query
-	//make it array
 	pendingtx, err := mysql.SharedStore().GetPendingTx(int(blocknum-5), (chainId))
 	if pendingtx == nil || err != nil {
 		return
@@ -65,25 +63,3 @@ func blockConf(blocknum int64, client *ethclient.Client, chainId int) {
 		fmt.Println("receipt:", receipt)
 	}
 }
-
-// 1000
-
-// 995
-// signed
-
-// func signatureService(){
-
-// if tx status = true {
-
-// }
-// else{
-// 	delete tx fromn table;
-// }
-// select * from g_txburninfo where chainid=? AND completed=? AND blocknum < (currentblock-5) AND signed = false;
-
-// for(on tx list){
-// 	getsign(tx)
-// 	save in db;
-// }
-
-// }

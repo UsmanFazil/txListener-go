@@ -61,7 +61,7 @@ func chainService(chainInfo conf.ChainData) {
 					syncStartNum = uint64(lastConfimedBlock.Blocksyncnum)
 				}
 
-				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), lastConfimedBlock, chainInfo.ContractAddress, chainInfo.WsRpc, chainInfo.ChainId, client)
+				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), chainInfo.ContractAddress, chainInfo.WsRpc, chainInfo.ChainId, client)
 			}
 
 			go service.FindTx(block, false, chainInfo.ContractAddress, chainInfo.ChainId, client)

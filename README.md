@@ -18,5 +18,6 @@
 
 8- run code using `go run main.go`
 
+9- Run Rest server using go run rest/server.go
 
 

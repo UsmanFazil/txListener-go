@@ -81,6 +81,7 @@ func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
 		Transaction     string `json:"Transaction"`
 		Signature       string `json:"Signature"`
 		UserAddress     string `json:"UserAddress"`
+		Burnid          string `json:"Burnid"`
 	}{
 		Contractaddress: resp.Contractadd,
 		Originchainid:   respBurn.Originchainid,
@@ -89,6 +90,7 @@ func GetTxwithSignature(w http.ResponseWriter, r *http.Request) {
 		Transaction:     respBurn.Txhash,
 		Signature:       respBurn.Signature,
 		UserAddress:     respBurn.Address,
+		Burnid:          respBurn.Burnid,
 	}, nil)
 
 	if err != nil {

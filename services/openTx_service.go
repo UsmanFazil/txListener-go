@@ -109,11 +109,18 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 				Tochainid:     vLog.Topics[3].Big().Int64(),
 				Originchainid: vLog.Topics[2].Big().Int64(),
 				Status:        "pending",
-				Burnid:        hex.EncodeToString(mintEvent.BurnId[:]),
+				Burnid:        hex.EncodeToString(mintEvent.RefId[:]),
 			}
 
-			mysql.SharedStore().UpdateTxBurnInfoMinted(tx.Burnid, int(tx.Originchainid))
-			mysql.SharedStore().AddTxMintInfo(tx)
+			err = mysql.SharedStore().UpdateTxBurnInfoMinted(tx.Burnid, int(tx.Originchainid))
+			if err != nil {
+				fmt.Println("error in updating:", err)
+			}
+
+			err = mysql.SharedStore().AddTxMintInfo(tx)
+			if err != nil {
+				fmt.Println("error in adding Mint Info:", err)
+			}
 		}
 	}
 

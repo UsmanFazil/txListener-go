@@ -40,10 +40,15 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 
 	txHash := common.HexToHash(singletxHash)
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
-	block, _ := client.BlockByNumber(context.Background(), receipt.BlockNumber)
 
 	if err != nil {
 		fmt.Println(err)
+		return
+	}
+	block, err := client.BlockByNumber(context.Background(), receipt.BlockNumber)
+	if err != nil {
+		fmt.Println("error in getBlockNumber", err)
+		return
 	}
 
 	File, err := ioutil.ReadFile(path)
@@ -106,6 +111,7 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 				Status:        "pending",
 				Burnid:        hex.EncodeToString(mintEvent.BurnId[:]),
 			}
+
 			mysql.SharedStore().UpdateTxBurnInfoMinted(tx.Burnid, int(tx.Originchainid))
 			mysql.SharedStore().AddTxMintInfo(tx)
 		}

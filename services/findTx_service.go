@@ -46,12 +46,13 @@ func blockConf(blocknum int64, client *ethclient.Client, chainId int) {
 		txHash := common.HexToHash(pendingtx[i].Txhash)
 
 		receipt, err := client.TransactionReceipt(context.Background(), txHash)
-		fmt.Println("status reciept ---------------", receipt.Status)
+
 		if receipt.Status == 0 {
 			return
 		}
+		contractaddrTochainId := getContractAddress(pendingtx[i].Tochainid)
 
-		signature := getSignature(pendingtx[i].Originchainid, pendingtx[i].Tochainid, pendingtx[i].Contractadd, pendingtx[i].Burnid, pendingtx[i].Address, pendingtx[i].Amount)
+		signature := getSignature(pendingtx[i].Originchainid, pendingtx[i].Tochainid, contractaddrTochainId, pendingtx[i].Burnid, pendingtx[i].Address, pendingtx[i].Amount)
 		err = mysql.SharedStore().UpdateTxBurnInfo(pendingtx[i].Txhash, signature)
 		if err != nil {
 			fmt.Println("error in updating Burn Info:", err)

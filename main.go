@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/block-listener/conf"
 	service "github.com/block-listener/services"
@@ -24,19 +23,22 @@ func chainService(chainInfo conf.ChainData) {
 	fmt.Println("service started, chain ID: ", chainInfo.ChainId)
 	client, err := ethclient.Dial(chainInfo.WsRpc)
 	if err != nil {
-		log.Fatal(err)
+		chainService(chainInfo)
+		return
 	}
 	service.OpenTx(client, chainInfo.ChainId)
 
 	headers := make(chan *types.Header)
 	sub, err := client.SubscribeNewHead(context.Background(), headers)
 	if err != nil {
-		log.Fatal(err)
+		chainService(chainInfo)
+		return
 	}
 	fmt.Println("ChainId:", chainInfo.ChainId)
 	lastConfimedBlock, err := service.GetBlockInfobyChainId(chainInfo.ChainId)
 	if err != nil {
-		log.Fatal(err)
+		chainService(chainInfo)
+		return
 	}
 
 	firstRun := true

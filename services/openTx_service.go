@@ -17,8 +17,8 @@ import (
 )
 
 var (
-	logBurnSig     = []byte("Burn(address,uint256,uint256,uint256,bytes32)")
-	LogMintSig     = []byte("Mint(address,uint256,uint256,uint256,bytes32,bytes32)")
+	logBurnSig     = []byte("BridgeBurn(address,uint256,uint256,uint256,bytes32)")
+	LogMintSig     = []byte("BridgeMint(address,uint256,uint256,uint256,bytes32,bytes32)")
 	logBurnSigHash = crypto.Keccak256Hash(logBurnSig)
 	logMintSigHash = crypto.Keccak256Hash(LogMintSig)
 )

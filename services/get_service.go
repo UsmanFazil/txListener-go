@@ -35,8 +35,16 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	var getAllInfo []*models.GetInfoVo
 
+	var i = 0
 	for _, product := range resp {
 		getAllInfo = append(getAllInfo, models.UserInfoVo(product))
+		if product.Status == "minted" {
+			mintInfo, errInfo := mysql.SharedStore().GetTxMintInfoByBurnId(product.Burnid)
+			if errInfo == nil && mintInfo != nil {
+				getAllInfo[i].Transaction = mintInfo.Txhash
+			}
+			i++
+		}
 	}
 
 	writeJSON(w, getAllInfo, nil)

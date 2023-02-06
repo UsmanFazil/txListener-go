@@ -89,7 +89,13 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 
 			// contractAddress := getContractAddress(tx.Originchainid)
 			// tx.Signature = getSignature(tx.Originchainid, tx.Tochainid, contractAddress, tx.Burnid, tx.Address, burnEvent.Amount.String())
-			mysql.SharedStore().AddTxBurnInfo(tx)
+
+			burnInfo, errInfo := mysql.SharedStore().GetTxBurnInfoByHash(tx.Txhash)
+			if errInfo == nil && burnInfo != nil {
+				fmt.Printf("BurnInfo not null======%s\n", tx.Txhash)
+			} else {
+				mysql.SharedStore().AddTxBurnInfo(tx)
+			}
 
 		case logMintSigHash.Hex():
 			fmt.Printf("Log Name: Mint\n")
@@ -117,10 +123,16 @@ func OpenLogs(client *ethclient.Client, singletxHash string, txhashid int) {
 				fmt.Println("error in updating:", err)
 			}
 
-			err = mysql.SharedStore().AddTxMintInfo(tx)
-			if err != nil {
-				fmt.Println("error in adding Mint Info:", err)
+			mintInfo, errInfo := mysql.SharedStore().GetTxMintInfoByHash(tx.Txhash)
+			if errInfo == nil && mintInfo != nil {
+				fmt.Printf("MintedInfo not null======:%s\n", tx.Txhash)
+			} else {
+				err = mysql.SharedStore().AddTxMintInfo(tx)
+				if err != nil {
+					fmt.Println("error in adding Mint Info:", err)
+				}
 			}
+
 		}
 	}
 

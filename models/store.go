@@ -29,4 +29,6 @@ type Store interface {
 	//GetTxMintInfo(txHash string) (*Txmintinfo, error)
 
 	GetTxMintInfoByBurnId(burnId string) (*Txmintinfo, error)
+	GetTxMintInfoByHash(txhash string) (*Txmintinfo, error)
+	GetTxBurnInfoByHash(txhash string) (*Txburninfo, error)
 }

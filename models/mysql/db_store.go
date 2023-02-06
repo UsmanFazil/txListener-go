@@ -56,6 +56,24 @@ func (s *Store) GetTxMintInfoByBurnId(burnid string) (*models.Txmintinfo, error)
 	return &tx, err
 }
 
+func (s *Store) GetTxMintInfoByHash(txhash string) (*models.Txmintinfo, error) {
+	var tx models.Txmintinfo
+	err := s.db.Raw("SELECT * FROM g_txmintinfo WHERE txhash=? ", txhash).Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &tx, err
+}
+
+func (s *Store) GetTxBurnInfoByHash(txhash string) (*models.Txburninfo, error) {
+	var tx models.Txburninfo
+	err := s.db.Raw("SELECT * FROM g_txburninfo WHERE txhash=? ", txhash).Scan(&tx).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &tx, err
+}
+
 func (s *Store) GetPendingTx(blocknum, chainId int) ([]models.Txpendinginfo, error) {
 	var tx []models.Txpendinginfo
 	err := s.db.Raw("SELECT * FROM g_txburninfo AS a, g_txhash AS b WHERE a.status='pending' AND b.id = a.txhashid AND b.blocknum<=? and b.chainid=?", blocknum, chainId).Scan(&tx).Error

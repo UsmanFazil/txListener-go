@@ -63,6 +63,7 @@ type GetInfoVo struct {
 	Tochainid     int64
 	Amount        string
 	Transaction   string
+	MintedTx      string
 	Useraddress   string
 	Txtime        uint64
 	Status        string
@@ -101,6 +102,7 @@ func UserInfoVo(product *Txburninfo) *GetInfoVo {
 		Tochainid:     product.Tochainid,
 		Amount:        product.Amount,
 		Transaction:   product.Txhash,
+		MintedTx:      "",
 		Useraddress:   product.Address,
 		Status:        product.Status,
 		Txtime:        product.Txtime,

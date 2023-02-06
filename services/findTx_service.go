@@ -27,7 +27,7 @@ func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId
 
 	SaveLastConfirmed(int(block.Number().Int64()), chainId, backupSync)
 
-	fmt.Println("Block parsed : ", block.Number().Uint64())
+	// fmt.Println("Block parsed : ", block.Number().Uint64())
 	if openFlag {
 		go OpenTx(client, chainId)
 	}

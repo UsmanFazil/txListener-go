@@ -54,7 +54,7 @@ func chainService(chainInfo conf.ChainData) {
 				fmt.Println("error in GetBlockByNumber:", err)
 				continue
 			}
-			fmt.Println("New block :", block.Number().Uint64())
+			// fmt.Println("New block :", block.Number().Uint64())
 
 			if firstRun && lastConfimedBlock != nil {
 

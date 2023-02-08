@@ -22,19 +22,6 @@
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "feePercentage",
-				"type": "uint256"
-			}
-		],
-		"name": "BridgeFeeUpdate",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "owner",
@@ -65,7 +52,7 @@
 				"type": "bytes32"
 			}
 		],
-		"name": "Burn",
+		"name": "BridgeBurn",
 		"type": "event"
 	},
 	{
@@ -73,12 +60,12 @@
 		"inputs": [
 			{
 				"indexed": false,
-				"internalType": "uint8",
-				"name": "version",
-				"type": "uint8"
+				"internalType": "uint256",
+				"name": "feePercentage",
+				"type": "uint256"
 			}
 		],
-		"name": "Initialized",
+		"name": "BridgeFeeUpdate",
 		"type": "event"
 	},
 	{
@@ -121,7 +108,20 @@
 				"type": "bytes32"
 			}
 		],
-		"name": "Mint",
+		"name": "BridgeMint",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint8",
+				"name": "version",
+				"type": "uint8"
+			}
+		],
+		"name": "Initialized",
 		"type": "event"
 	},
 	{
@@ -183,6 +183,19 @@
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "PercentageDecimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -209,6 +222,19 @@
 			}
 		],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "bridgeFeePercentage",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -314,6 +340,16 @@
 				"internalType": "uint256",
 				"name": "percentageDecimals_",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "chainIds_",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bool[]",
+				"name": "chainStatus_",
+				"type": "bool[]"
 			}
 		],
 		"name": "init",
@@ -396,7 +432,7 @@
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -425,6 +461,25 @@
 				"internalType": "bytes32",
 				"name": "",
 				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "supportedChains",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -485,6 +540,24 @@
 			}
 		],
 		"name": "updateSigners",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "chainIds_",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bool[]",
+				"name": "chainStatus_",
+				"type": "bool[]"
+			}
+		],
+		"name": "updateSupportedChains",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

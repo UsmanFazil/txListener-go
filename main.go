@@ -42,6 +42,7 @@ func chainService(chainInfo conf.ChainData) {
 	}
 
 	firstRun := true
+	ctx := context.Background()
 
 	for {
 		select {
@@ -64,9 +65,14 @@ func chainService(chainInfo conf.ChainData) {
 				}
 
 				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), chainInfo.ContractAddress, chainInfo.WsRpc, chainInfo.ChainId, client)
+			} else if firstRun && lastConfimedBlock == nil {
+				syncStartNum := chainInfo.BackupSyncnum
+
+				go service.SyncBlocks(syncStartNum, block.Number().Uint64(), chainInfo.ContractAddress, chainInfo.WsRpc, chainInfo.ChainId, client)
+
 			}
 
-			go service.FindTx(block, false, chainInfo.ContractAddress, chainInfo.ChainId, client)
+			go service.FindTx(ctx, header.Number, false, chainInfo.ContractAddress, chainInfo.ChainId, client)
 
 			firstRun = false
 		}

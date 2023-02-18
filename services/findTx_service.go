@@ -3,14 +3,21 @@ package service
 import (
 	"context"
 	"fmt"
+	"math/big"
+	"time"
 
 	"github.com/block-listener/models/mysql"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId int, client *ethclient.Client) {
+func FindTx(ctx context.Context, blockNumber *big.Int, backupSync bool, contractAddress string, chainId int, client *ethclient.Client) {
+	block, err := client.BlockByNumber(ctx, blockNumber)
+	if err != nil {
+		fmt.Println("error in syncBlocks", err)
+		return
+	}
+
 	openFlag := false
 	for _, tx := range block.Transactions() {
 		if tx.To() == nil {
@@ -33,6 +40,8 @@ func FindTx(block *types.Block, backupSync bool, contractAddress string, chainId
 	}
 
 	go blockConf(block.Number().Int64(), client, chainId)
+	fmt.Println("timeNow------------end", time.Now())
+
 }
 
 func blockConf(blocknum int64, client *ethclient.Client, chainId int) {

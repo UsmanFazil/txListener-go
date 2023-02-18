@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/big"
+	"time"
 
 	"github.com/block-listener/models/mysql"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -26,16 +27,11 @@ func SyncBlocks(startBlock, endBlock uint64, contractAddress, wsRpc string, chai
 
 	blockNumber := big.NewInt(int64(startBlock))
 	fmt.Println("startBlock:", startBlock, "endBlock", endBlock)
+	fmt.Println("timeNow------------start", time.Now())
 
 	for i := startBlock; i < endBlock; i++ {
 
-		block, err := client.BlockByNumber(ctx, blockNumber)
-		if err != nil {
-			fmt.Println("error in syncBlocks", err)
-			return
-		}
-
-		go FindTx(block, true, contractAddress, chainId, ethClient)
+		go FindTx(ctx, blockNumber, true, contractAddress, chainId, client)
 		blockNumber.Add(blockNumber, big.NewInt(int64(1)))
 	}
 
